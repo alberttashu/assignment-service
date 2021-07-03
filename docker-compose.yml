@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  assignmentservice.host:
+    build: 
+      context: .
+      dockerfile: ./src/AssignmentService.Host/Dockerfile
+    ports:
+      - "5000:80"
+    volumes:
+      - ./seed:/seed
+    networks:
+      - local
+networks: 
+  local: 
+    driver: bridge
