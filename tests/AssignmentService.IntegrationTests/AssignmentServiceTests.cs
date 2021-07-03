@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Mongo2Go;
+    using MongoDB.Bson.Serialization.Conventions;
     using MongoDB.Driver;
     using NUnit.Framework;
     using NUnit.Framework.Constraints;
@@ -23,9 +24,12 @@
             _client = new MongoClient(_runner.ConnectionString);
             _db = _client.GetDatabase(Constants.AssignmentsDbName);
 
+            var conventionPack = new ConventionPack { new IgnoreExtraElementsConvention(true) };
+            ConventionRegistry.Register("IgnoreExtraElements", conventionPack, type => true);
+            
             await DataSeeder.SeedAsync(_db, "./seed/Data.json");
 
-            _service = new AssignmentService();
+            _service = new AssignmentService(_db);
         }
 
         [OneTimeTearDown]
@@ -41,10 +45,10 @@
             var userId = 5;
             var expected = new List<AssignedVideoResponseModel>()
             {
-                new() {Video = "video 5", Priority = "high"},
-                new() {Video = "video 6", Priority = "high"},
-                new() {Video = "video 7", Priority = "high"},
-                new() {Video = "video 8", Priority = "medium"}
+                new() {Video = "Video 5", Priority = "high"},
+                new() {Video = "Video 6", Priority = "high"},
+                new() {Video = "Video 7", Priority = "high"},
+                new() {Video = "Video 8", Priority = "medium"}
             };
 
             // act 

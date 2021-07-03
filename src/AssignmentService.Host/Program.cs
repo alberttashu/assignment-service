@@ -1,7 +1,5 @@
 namespace AssignmentService.Host
 {
-    using System;
-    using System.IO;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Hosting;
 
@@ -9,8 +7,6 @@ namespace AssignmentService.Host
     {
         public static void Main(string[] args)
         {
-            var seed = File.ReadAllText("/seed/Data.json");
-            Console.WriteLine(seed);
             CreateHostBuilder(args).Build().Run();
         }
 

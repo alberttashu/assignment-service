@@ -1,7 +1,9 @@
 ﻿namespace AssignmentService.Host
 {
+    using System.Diagnostics;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using MongoDB.Bson.Serialization.Conventions;
     using MongoDB.Driver;
 
     public static class ServiceCollectionExtensions
@@ -14,6 +16,9 @@
             var connection = configuration.GetValue<string>("environment:mongo:connectionString");
             services.AddMongoDb(connection, config.SeedingEnabled, config.SeedFilePath);
 
+            var conventionPack = new ConventionPack { new IgnoreExtraElementsConvention(true) };
+            ConventionRegistry.Register("IgnoreExtraElements", conventionPack, type => true);
+            
             services.AddSingleton<AssignmentService>();
             services.AddControllers();
             
@@ -25,7 +30,7 @@
         {
             var client = new MongoClient(connectionString);
             var db = client.GetDatabase(Constants.AssignmentsDbName);
-            if (seedingEnabled && seedFilePath != null)
+            if (!Debugger.IsAttached && seedingEnabled && seedFilePath != null)
             {
                 DataSeeder.SeedAsync(db, seedFilePath)
                     .ConfigureAwait(false)

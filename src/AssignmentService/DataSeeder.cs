@@ -148,7 +148,7 @@
                 users[userToVideo.UserId].Assignments
                     .Add(new Assignment()
                     {
-                        Priority = ParsePriority(userToVideo.Priority),
+                        Priority = Mapper.ToPriority(userToVideo.Priority),
                         VideoId = userToVideo.VideoId
                     });
             }
@@ -164,7 +164,7 @@
                 users[userToFlow.UserId].FlowAssignments
                     .Add(new FlowAssignment()
                     {
-                        Priority = ParsePriority(userToFlow.Priority),
+                        Priority = Mapper.ToPriority(userToFlow.Priority),
                         FlowId = userToFlow.FlowId
                     });
             }
@@ -174,18 +174,18 @@
                 groups[groupToVideo.GroupId].Assignments
                     .Add(new Assignment()
                     {
-                        Priority = ParsePriority(groupToVideo.Priority),
+                        Priority = Mapper.ToPriority(groupToVideo.Priority),
                         VideoId = groupToVideo.VideoId
                     });
             }
 
             foreach (var groupsToFlow in seedData.GroupsToFlows)
             {
-                groups[groupsToFlow.GroupId].Assignments
-                    .Add(new Assignment()
+                groups[groupsToFlow.GroupId].FlowAssignments
+                    .Add(new FlowAssignment()
                     {
-                        Priority = ParsePriority(groupsToFlow.Priority),
-                        VideoId = groupsToFlow.FlowId
+                        Priority = Mapper.ToPriority(groupsToFlow.Priority),
+                        FlowId = groupsToFlow.FlowId
                     });
             }
 
@@ -213,18 +213,6 @@
                 flowsCollection.InsertManyAsync(flows.Select(x => x.Value).ToList()),
                 videosCollection.InsertManyAsync(videos.Select(x => x.Value).ToList())
             );
-        }
-
-        private static Priority ParsePriority(string priority)
-        {
-            return priority switch
-            {
-                "low" => Priority.Low,
-                "medium" => Priority.Medium,
-                "high" => Priority.High,
-                "critical" => Priority.Critical,
-                _ => throw new Exception("Unexpected seed priority")
-            };
         }
     }
 }
