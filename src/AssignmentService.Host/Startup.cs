@@ -27,6 +27,11 @@ namespace AssignmentService.Host
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseHealthChecks("/health");
+            app.UseRouting();
+            app.UseEndpoints(config =>
+            {
+                config.MapControllers();
+            });
         }
     }
 }

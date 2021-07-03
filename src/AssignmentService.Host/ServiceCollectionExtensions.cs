@@ -13,6 +13,10 @@
             configuration.GetSection("application").Bind(config);
             var connection = configuration.GetValue<string>("environment:mongo:connectionString");
             services.AddMongoDb(connection, config.SeedingEnabled, config.SeedFilePath);
+
+            services.AddSingleton<AssignmentService>();
+            services.AddControllers();
+            
             return services;
         }
 
