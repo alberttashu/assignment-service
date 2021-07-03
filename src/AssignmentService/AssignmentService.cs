@@ -10,11 +10,10 @@
         {
             return new List<AssignedVideoResponseModel>()
             {
-                new AssignedVideoResponseModel()
-                {
-                    Video = "video 6",
-                    Priority = "high"
-                }
+                new() {Video = "video 5", Priority = "high"},
+                new() {Video = "video 6", Priority = "high"},
+                new() {Video = "video 7", Priority = "high"},
+                new() {Video = "video 8", Priority = "medium"}
             };
         }
     }
